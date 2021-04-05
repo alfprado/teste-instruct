@@ -1,7 +1,7 @@
-from rest_framework import viewsets, status
-from rest_framework.views import Response
 
-from api import models, serializers
+from rest_framework.views import Response, APIView
+from api.models import Organization
+from api.serializers import OrganizationSerializer
 from api.integrations.github import GithubApi
 
 # TODOS:
@@ -11,11 +11,11 @@ from api.integrations.github import GithubApi
 # 4 - Retornar os dados de organizações ordenados pelo score na listagem da API
 
 
-class OrganizationViewSet(viewsets.ModelViewSet):
-
-    queryset = models.Organization.objects.all()
-    serializer_class = serializers.OrganizationSerializer
-    lookup_field = "login"
-
-    def retrieve(self, request, login=None):
-        return Response({})
+class OrganizationList(APIView):
+    """
+    List all Organizations ordered by score.
+    """
+    def get(self, request, format=None):
+        organizations = Organization.objects.all().order_by('-score')
+        serializer = OrganizationSerializer(organizations, many=True)
+        return Response(serializer.data)
