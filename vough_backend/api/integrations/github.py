@@ -22,7 +22,7 @@ class GithubApi:
                 }
             )
 
-            if response.status_code == 200:
+            if response.status_code == 200 and response.json():
                 return response.json()
         except Exception:
             return {}
