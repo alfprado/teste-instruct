@@ -7,5 +7,6 @@ routers = DefaultRouter()
 
 urlpatterns = [
     path("", include(routers.urls)),
-    path("orgs/", views.OrganizationList.as_view())
+    path("orgs/", views.OrganizationList.as_view()),
+    path('orgs/<str:pk>/', views.OrganizationDetail.as_view())
 ]
