@@ -1,14 +1,9 @@
 from rest_framework.views import Response, APIView
+from rest_framework import status
 from api.models import Organization
 from api.serializers import OrganizationSerializer
 from api.integrations.github import GithubApi
 from django.http import Http404
-
-# TODOS:
-# 1 - Buscar organização pelo login através da API do Github
-# 2 - Armazenar os dados atualizados da organização no banco
-# 3 - Retornar corretamente os dados da organização
-# 4 - Retornar os dados de organizações ordenados pelo score na listagem da API
 
 
 class OrganizationList(APIView):
@@ -41,7 +36,7 @@ class OrganizationDetail(APIView):
             members = git.get_organization_public_members(pk)
             data = {
                 'login': pk,
-                'name': org['name'],
+                'name': org['name'] if org['name'] else pk,
                 'score': org['public_repos'] + members
             }
 
@@ -63,3 +58,14 @@ class OrganizationDetail(APIView):
 
                 return Response(serializer.data)
         raise Http404
+
+    def delete(self, request, pk, format=None):
+        """
+        Delete an Organization.
+        """
+        organization = self.get_object(pk)
+        if organization:
+            organization.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            raise Http404
