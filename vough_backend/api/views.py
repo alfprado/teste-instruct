@@ -1,11 +1,18 @@
 from rest_framework.views import Response, APIView
 from rest_framework import status
+from django.shortcuts import render
 from api.models import Organization
 from api.serializers import OrganizationSerializer
 from api.integrations.github import GithubApi
 from django.http import Http404
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+
+def handler404(request, exception):
+    return render(request, '404.html', status=404)
+
+def handler500(request):
+    return render(request, '500.html', status=500)
 
 class OrganizationList(APIView):
     """
