@@ -36,5 +36,5 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui')
 ]
 
-handler404 = 'api.views.handler404'
-handler500 = 'api.views.handler500'
+handler404 = 'utils.views.error_404'
+handler500 = 'utils.views.error_500'
